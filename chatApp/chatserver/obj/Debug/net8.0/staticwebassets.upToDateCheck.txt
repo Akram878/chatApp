@@ -1,3 +1,4 @@
+wwwroot\avatars\c6320f6d-bb38-43f6-a9ff-889c4906cd3c.jpg
 wwwroot\css\site.css
 wwwroot\favicon.ico
 wwwroot\js\site.js

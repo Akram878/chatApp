@@ -2,7 +2,14 @@
 using ChatServer.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.WebHost.UseUrls("http://0.0.0.0:5000");
+var port = builder.Configuration.GetValue<int?>("Server:Port") ?? 5000;
+
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(port);
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -20,13 +27,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.UseStaticFiles();
 app.MapControllers();
 
 app.MapHub<ChatHub>("/chat");
+
+app.Lifetime.ApplicationStarted.Register(() =>
+{
+    var addresses = app.Urls.Any() ? string.Join(", ", app.Urls) : $"http://0.0.0.0:{port}";
+    app.Logger.LogInformation("Chat server listening on {Addresses}", addresses);
+});
 
 app.Run();

@@ -20,7 +20,7 @@ public class AuthController : ControllerBase
     {
         _email = email;
         _hub = hub;
-        _serverBaseUrl = config["App:PublicBaseUrl"] ?? "http://localhost:5172";
+        _serverBaseUrl = config["App:PublicBaseUrl"] ?? "http://0.0.0.0:5000";
     }
 
 

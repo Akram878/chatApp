@@ -16,9 +16,9 @@ namespace ChatClient
 {
     public partial class ProfileWindow : Window
     {
-        private static readonly string BaseUrl =
-            Environment.GetEnvironmentVariable("CHATAPP_SERVER_BASE_URL") ?? "http://192.168.0.9:5000";
-        private readonly HttpClient _httpClient = new HttpClient(new HttpClientHandler { ServerCertificateCustomValidationCallback = (_, _, _, _) => true });
+        private static readonly string BaseUrl = ServerConfig.ServerBaseUrl;
+        private static readonly string HubUrl = ServerConfig.HubUrl;
+        private readonly HttpClient _httpClient = new HttpClient();
         private HubConnection? _hub;
 
         public ProfileWindow()
@@ -83,14 +83,14 @@ namespace ChatClient
                 }
 
                 var email = string.IsNullOrWhiteSpace(Session.Email) ? "anonymous@example.com" : Session.Email;
-                var hubUrl = $"{BaseUrl}/chat?user={Uri.EscapeDataString(email)}";
+                var hubUrl = $"{HubUrl}?user={Uri.EscapeDataString(email)}";
 
                 _hub = new HubConnectionBuilder().WithUrl(hubUrl).WithAutomaticReconnect().Build();
                 await _hub.StartAsync();
             }
             catch
             {
-
+                Console.WriteLine($"Не удалось подключиться к SignalR ({HubUrl}).");
             }
         }
 

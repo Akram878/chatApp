@@ -101,3 +101,4 @@ D:\programming\chatApp-main\chatApp-main\chatApp\chatclient\obj\Debug\net8.0-win
 D:\programming\chatApp-main\chatApp-main\chatApp\chatclient\obj\Debug\net8.0-windows\ChatClient.pdb
 D:\programming\chatApp-main\chatApp-main\chatApp\chatclient\obj\Debug\net8.0-windows\ChatClient.genruntimeconfig.cache
 D:\programming\chatApp-main\chatApp-main\chatApp\chatclient\obj\Debug\net8.0-windows\ref\ChatClient.dll
+D:\programming\chatApp-main\chatApp-main\chatApp\chatclient\obj\Debug\net8.0-windows\chatclient.sourcelink.json

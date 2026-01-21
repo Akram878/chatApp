@@ -163,10 +163,7 @@
             <Border Grid.Row="1"
                     Style="{StaticResource CardBorderStyle}"
                     Padding="10">
-                <ListBox x:Name="MessagesListBox"
-                         DisplayMemberPath="DisplayText"
-                         MouseDoubleClick="MessagesListBox_MouseDoubleClick"
-                         MouseRightButtonUp="MessagesListBox_MouseRightButtonUp"/>
+               
             </Border>
 
             <!-- ===================== INPUT ===================== -->

@@ -56,20 +56,16 @@ namespace ChatClient
         }
 
         // Иницилизация подключения
-        private static readonly string ServerBaseUrl =
-               Environment.GetEnvironmentVariable("CHATAPP_SERVER_BASE_URL") ?? "http://192.168.0.9:5000";
+        private static readonly string ServerBaseUrl = ServerConfig.ServerBaseUrl;
+        private static readonly string HubUrl = ServerConfig.HubUrl;
 
         private void InitializeConnection()
         {
-            // Адрес хаба
-            var hubUrl = $"{ServerBaseUrl}/chat";
-
-            _connection = new HubConnectionBuilder().WithUrl(hubUrl).WithAutomaticReconnect().Build();
-
+           
             // email текущего пользователя
             var email = string.IsNullOrEmpty(Session.Email) ? "anonymous@example.com" : Session.Email;
 
-            var urlWithUser = $"{hubUrl}?user={Uri.EscapeDataString(email)}";
+            var urlWithUser = $"{HubUrl}?user={Uri.EscapeDataString(email)}";
 
             _connection = new HubConnectionBuilder().WithUrl(urlWithUser).WithAutomaticReconnect().Build();
 
@@ -179,20 +175,27 @@ namespace ChatClient
                     }
                 });
             });
-            ConnectToServer();
+            ConnectToServer(urlWithUser);
         }
 
-        private async void ConnectToServer()
+        private async void ConnectToServer(string hubUrl)
         {
             try
             {
+                _currentMessages.Add(new ChatMessageView
+                {
+                    Text = $"Подключение к {hubUrl}",
+                    Timestamp = DateTime.Now,
+                    FromEmail = "system"
+                });
+
                 await _connection.StartAsync();
                 ConnectionStatusTextBlock.Text = "Подключено";
                 ConnectionStatusTextBlock.Foreground = Brushes.Green;
 
                 _currentMessages.Add(new ChatMessageView
                 {
-                    Text = "Подключено к серверу чата.",
+                    Text = $"Подключено к серверу чата: {hubUrl}",
                     Timestamp = DateTime.Now,
                     FromEmail = "system"
                 });
@@ -203,7 +206,7 @@ namespace ChatClient
                 ConnectionStatusTextBlock.Foreground = Brushes.Red;
                 _currentMessages.Add(new ChatMessageView
                 {
-                    Text = $"Не удалось подключиться: {ex.Message}",
+                    Text = $"Не удалось подключиться к {hubUrl}: {ex.Message}",
                     Timestamp = DateTime.Now,
                     FromEmail = "system"
                 });

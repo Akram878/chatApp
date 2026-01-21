@@ -10,18 +10,12 @@ namespace ChatClient
 {
     public partial class LoginWindow : Window
     {
-        private static readonly string BaseUrl = ApiConfig.ServerBaseUrl;
+        private static readonly string BaseUrl = ServerConfig.ServerBaseUrl;
         private readonly HttpClient _httpClient = new HttpClient();
 
         public LoginWindow()
         {
             InitializeComponent();
-        }
-        public static class ApiConfig
-        {
-            public static readonly string ServerBaseUrl =
-               Environment.GetEnvironmentVariable("CHATAPP_SERVER_BASE_URL") ?? "http://192.168.0.9:5000";
-
         }
 
         // DTO для логина
