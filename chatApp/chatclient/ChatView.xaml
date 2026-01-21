@@ -101,7 +101,12 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
                             <Border x:Name="MessageBubble"
+                                    Grid.Row="0"
                                     MaxWidth="420"
                                     Margin="6,2"
                                     Padding="12,8"
@@ -121,16 +126,43 @@
                                                Foreground="{StaticResource BrushTextPrimary}"/>
                                 </StackPanel>
                             </Border>
+                            <StackPanel x:Name="MetadataPanel"
+                                        Grid.Row="1"
+                                        Orientation="Horizontal"
+                                        Margin="12,2,12,0"
+                                        HorizontalAlignment="Left">
+                                <TextBlock x:Name="TimeText"
+                                           Text="{Binding Timestamp, StringFormat={}{0:HH:mm}}"
+                                           FontSize="10"
+                                           Foreground="{StaticResource BrushTextSecondary}"/>
+                                <TextBlock x:Name="EditedLabel"
+                                           Text="edited"
+                                           FontSize="10"
+                                           Margin="6,0,0,0"
+                                           Foreground="{StaticResource BrushTextSecondary}"
+                                           Visibility="Collapsed"/>
+                                <TextBlock x:Name="StatusIcon"
+                                           Text="{Binding StatusIcon}"
+                                           FontSize="11"
+                                           Margin="6,0,0,0"
+                                           Foreground="{StaticResource BrushTextSecondary}"
+                                           Visibility="Collapsed"/>
+                            </StackPanel>
                         </Grid>
                         <DataTemplate.Triggers>
                             <DataTrigger Binding="{Binding IsFile}" Value="True">
                                 <Setter TargetName="FileLabel" Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsEdited}" Value="True">
+                                <Setter TargetName="EditedLabel" Property="Visibility" Value="Visible"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding FromEmail}" Value="{x:Static local:Session.Email}">
                                 <Setter TargetName="MessageBubble" Property="Background" Value="{StaticResource BrushPrimary}"/>
                                 <Setter TargetName="MessageBubble" Property="HorizontalAlignment" Value="Right"/>
                                 <Setter TargetName="MessageText" Property="Foreground" Value="White"/>
                                 <Setter TargetName="FileLabel" Property="Foreground" Value="White"/>
+                                <Setter TargetName="MetadataPanel" Property="HorizontalAlignment" Value="Right"/>
+                                <Setter TargetName="StatusIcon" Property="Visibility" Value="Visible"/>
                             </DataTrigger>
                         </DataTemplate.Triggers>
                     </DataTemplate>

@@ -21,8 +21,9 @@ namespace ChatClient
 
         // Статус
         private string _status = "Sent";
+        private bool _isEdited;
 
-        [JsonIgnore] 
+        [JsonIgnore]
         public string Status
         {
             get => _status;
@@ -32,10 +33,27 @@ namespace ChatClient
                 {
                     _status = value;
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(StatusIcon));
                     OnPropertyChanged(nameof(DisplayText));
                 }
             }
         }
+
+        [JsonIgnore]
+        public bool IsEdited
+        {
+            get => _isEdited;
+            set
+            {
+                if (_isEdited == value) return;
+                _isEdited = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(DisplayText));
+            }
+        }
+
+        [JsonIgnore]
+        public string StatusIcon => Status == "Read" ? "✔✔" : "✔";
 
         // Текст, который показываем в ListBox
         [JsonIgnore]
@@ -48,14 +66,7 @@ namespace ChatClient
 
                 if (isMine)
                 {
-                    var statusRu = Status switch
-                    {
-                        "Delivered" => "доставлено",
-                        "Read" => "прочитано",
-                        _ => "отправлено"
-                    };
-
-                    return $"{Timestamp:T} вы: {kind}{Text} [{statusRu}]";
+                    return $"{Timestamp:T} вы: {kind}{Text}";
                 }
                 else
                 {

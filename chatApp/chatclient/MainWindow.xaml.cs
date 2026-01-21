@@ -49,7 +49,7 @@ namespace ChatClient
             ChatView.MessageContextRequested += OnMessageContextRequested;
 
             // Привязываем источники данных
-          
+
             ContactsListBox.ItemsSource = _contacts;
 
             InitializeConnection();
@@ -328,7 +328,19 @@ namespace ChatClient
 
         private void OnMessageEdited(int id, string newText)
         {
-            _ = Dispatcher.InvokeAsync(async () => { await ReloadCurrentDialogAsync(); });
+            Dispatcher.Invoke(() =>
+            {
+                var msg = _currentMessages.FirstOrDefault(m => m.Id == id);
+                if (msg == null)
+                    return;
+
+                msg.Text = newText;
+                msg.IsEdited = true;
+                msg.Timestamp = DateTime.Now;
+                var index = _currentMessages.IndexOf(msg);
+                if (index >= 0)
+                    _currentMessages[index] = msg;
+            });
         }
 
 
@@ -359,7 +371,7 @@ namespace ChatClient
                 }
                 else
                 {
-                    var user = string.IsNullOrWhiteSpace(_chatViewModel.UserName) ? (Session.Name ?? string.Empty) : _chatViewModel.UserName; 
+                    var user = string.IsNullOrWhiteSpace(_chatViewModel.UserName) ? (Session.Name ?? string.Empty) : _chatViewModel.UserName;
                     await _connection.InvokeAsync("SendMessage", user, text);
                 }
                 _chatViewModel.MessageText = string.Empty;
@@ -377,7 +389,7 @@ namespace ChatClient
             }
         }
 
-       
+
 
         // Контакты и диалоги
         private async void ContactsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -645,7 +657,7 @@ namespace ChatClient
 
         private async Task ReloadCurrentDialogAsync()
         {
-            if (string.IsNullOrEmpty(_currentDialogEmail) || _connection == null ||  _connection.State != HubConnectionState.Connected)
+            if (string.IsNullOrEmpty(_currentDialogEmail) || _connection == null || _connection.State != HubConnectionState.Connected)
                 return;
             try
             {
