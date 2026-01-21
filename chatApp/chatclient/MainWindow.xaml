@@ -44,7 +44,6 @@
                 </StackPanel>
 
                 <ListBox x:Name="ContactsListBox"
-                         DockPanel.Dock="Bottom"
                          SelectionChanged="ContactsListBox_SelectionChanged">
 
                     <ListBox.ItemTemplate>
@@ -142,7 +141,7 @@
                     <StackPanel Grid.Column="1"
                                 Orientation="Horizontal"
                                 HorizontalAlignment="Right"
-                                VerticalAlignment="Top">
+                                VerticalAlignment="Center">
 
                         <Button Content="Профиль"
                                 Width="100"
@@ -163,7 +162,7 @@
             <Border Grid.Row="1"
                     Style="{StaticResource CardBorderStyle}"
                     Padding="10">
-               
+                <ListBox x:Name="MessagesListBox"/>
             </Border>
 
             <!-- ===================== INPUT ===================== -->
