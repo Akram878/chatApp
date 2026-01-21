@@ -88,7 +88,7 @@ namespace ChatClient
                         ToEmail = "(всем)",
                         Text = message,
                         Timestamp = DateTime.Now,
-                        Status = "Sent"
+                        DeliveryStatus = MessageDeliveryStatus.Sent
                     });
                 });
             });
@@ -317,10 +317,7 @@ namespace ChatClient
                 var msg = _currentMessages.FirstOrDefault(m => m.Id == id);
                 if (msg != null)
                 {
-                    msg.Status = status;
-                    var index = _currentMessages.IndexOf(msg);
-                    if (index >= 0)
-                        _currentMessages[index] = msg;
+                    msg.DeliveryStatus = ParseDeliveryStatus(status);
                 }
             });
         }
@@ -336,10 +333,6 @@ namespace ChatClient
 
                 msg.Text = newText;
                 msg.IsEdited = true;
-                msg.Timestamp = DateTime.Now;
-                var index = _currentMessages.IndexOf(msg);
-                if (index >= 0)
-                    _currentMessages[index] = msg;
             });
         }
 
@@ -409,7 +402,7 @@ namespace ChatClient
                 foreach (var m in messages)
                     _currentMessages.Add(m);
 
-                var unread = messages.Where(m => m.ToEmail == Session.Email && m.Status != "Read").Select(m => m.Id).ToList();
+                var unread = messages.Where(m => m.ToEmail == Session.Email && m.DeliveryStatus != MessageDeliveryStatus.Read).Select(m => m.Id).ToList();
 
                 foreach (var id in unread)
                 {
@@ -604,6 +597,8 @@ namespace ChatClient
             try
             {
                 await _connection.InvokeAsync("EditMessage", msg.Id, newText);
+                msg.Text = newText;
+                msg.IsEdited = true;
             }
             catch (Exception ex)
             {
@@ -680,6 +675,16 @@ namespace ChatClient
             if (str.Equals("DoNotDisturb", StringComparison.OrdinalIgnoreCase)) return "DoNotDisturb";
             if (str.Equals("Online", StringComparison.OrdinalIgnoreCase)) return "Online";
             return "Offline";
+        }
+
+        private static MessageDeliveryStatus ParseDeliveryStatus(string? status)
+        {
+            if (string.IsNullOrWhiteSpace(status))
+                return MessageDeliveryStatus.Sent;
+
+            return Enum.TryParse(status, true, out MessageDeliveryStatus parsed)
+                ? parsed
+                : MessageDeliveryStatus.Sent;
         }
 
         private void ScrollMessagesToBottom()

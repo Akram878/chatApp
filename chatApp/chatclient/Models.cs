@@ -12,7 +12,7 @@ namespace ChatClient
         public int Id { get; set; }
         public string FromEmail { get; set; } = "";
         public string ToEmail { get; set; } = "";
-        public string Text { get; set; } = "";
+        private string _text = "";
         public DateTime Timestamp { get; set; }
         public bool IsFile { get; set; }
         public string? FileName { get; set; }
@@ -20,22 +20,31 @@ namespace ChatClient
         public bool IsDeleted { get; set; }
 
         // Статус
-        private string _status = "Sent";
+        private MessageDeliveryStatus _status = MessageDeliveryStatus.Sent;
         private bool _isEdited;
 
-        [JsonIgnore]
-        public string Status
+        public string Text
+        {
+            get => _text;
+            set
+            {
+                if (_text == value) return;
+                _text = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(DisplayText));
+            }
+        }
+
+        [JsonPropertyName("Status")]
+        public MessageDeliveryStatus DeliveryStatus
         {
             get => _status;
             set
             {
-                if (_status != value)
-                {
-                    _status = value;
-                    OnPropertyChanged();
-                    OnPropertyChanged(nameof(StatusIcon));
-                    OnPropertyChanged(nameof(DisplayText));
-                }
+                if (_status == value) return;
+                _status = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(StatusIcon));
             }
         }
 
@@ -48,12 +57,11 @@ namespace ChatClient
                 if (_isEdited == value) return;
                 _isEdited = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(DisplayText));
             }
         }
 
         [JsonIgnore]
-        public string StatusIcon => Status == "Read" ? "✔✔" : "✔";
+        public string StatusIcon => _status == MessageDeliveryStatus.Sent ? "✔" : "✔✔";
 
         // Текст, который показываем в ListBox
         [JsonIgnore]
@@ -80,6 +88,13 @@ namespace ChatClient
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string? name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    }
+
+    public enum MessageDeliveryStatus
+    {
+        Sent,
+        Delivered,
+        Read
     }
 
     public class ContactView : INotifyPropertyChanged
