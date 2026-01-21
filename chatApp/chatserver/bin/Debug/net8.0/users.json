@@ -1,0 +1,72 @@
+[
+  {
+    "Id": "1ed0b938-b385-490a-adff-48625d82f953",
+    "Email": "user1@mail.com",
+    "Password": "123",
+    "Name": "User 1",
+    "AvatarUrl": null,
+    "Bio": null,
+    "Status": 1,
+    "NotificationsEnabled": true,
+    "SoundEnabled": true,
+    "BannerEnabled": true,
+    "EmailConfirmed": false,
+    "EmailConfirmToken": null
+  },
+  {
+    "Id": "0d1bd382-258f-4409-8429-0a9d7178a516",
+    "Email": "user2@mail.com",
+    "Password": "123",
+    "Name": "User 2",
+    "AvatarUrl": null,
+    "Bio": null,
+    "Status": 0,
+    "NotificationsEnabled": true,
+    "SoundEnabled": true,
+    "BannerEnabled": true,
+    "EmailConfirmed": false,
+    "EmailConfirmToken": null
+  },
+  {
+    "Id": "1e4fa034-a373-43f7-8635-4530ff665a38",
+    "Email": "f2",
+    "Password": "123",
+    "Name": "f2",
+    "AvatarUrl": null,
+    "Bio": null,
+    "Status": 0,
+    "NotificationsEnabled": true,
+    "SoundEnabled": true,
+    "BannerEnabled": true,
+    "EmailConfirmed": false,
+    "EmailConfirmToken": null
+  },
+  {
+    "Id": "af8ae5f6-eb62-4962-9a8f-93b1594517aa",
+    "Email": "t@",
+    "Password": "123",
+    "Name": "t",
+    "AvatarUrl": "/avatars/af8ae5f6-eb62-4962-9a8f-93b1594517aa.png",
+    "Bio": null,
+    "Status": 0,
+    "NotificationsEnabled": true,
+    "SoundEnabled": true,
+    "BannerEnabled": true,
+    "EmailConfirmed": false,
+    "EmailConfirmToken": null
+  },
+  {
+    "Id": "c6320f6d-bb38-43f6-a9ff-889c4906cd3c",
+    "Email": "akram@gmail.com",
+    "Password": "akram123",
+    "Name": "akram",
+    "AvatarUrl": "/avatars/c6320f6d-bb38-43f6-a9ff-889c4906cd3c.jpg",
+    "Bio": null,
+    "Status": 0,
+    "NotificationsEnabled": true,
+    "SoundEnabled": true,
+    "BannerEnabled": true,
+    "EmailConfirmed": false,
+    "EmailConfirmToken": "6a4d8aad0f954f3590ae6457a6d143ea"
+  }
+]
