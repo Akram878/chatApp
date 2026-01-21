@@ -12,7 +12,6 @@ using System.Windows.Media;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Win32;
 using System.IO;
-using Microsoft.VisualBasic;
 
 namespace ChatClient
 {
@@ -46,7 +45,8 @@ namespace ChatClient
             ChatView.ProfileRequested += ProfileButton_Click;
             ChatView.LogoutRequested += LogoutButton_Click;
             ChatView.MessageDoubleClicked += OnMessageDoubleClicked;
-            ChatView.MessageContextRequested += OnMessageContextRequested;
+            ChatView.MessageEditRequested += OnMessageEditRequested;
+            ChatView.MessageDeleteRequested += OnMessageDeleteRequested;
 
             // Привязываем источники данных
 
@@ -570,18 +570,33 @@ namespace ChatClient
             }
         }
 
-        private async void EditMessageMenu_Click(object sender, RoutedEventArgs e)
+        private async void OnMessageEditRequested(object? sender, ChatMessageEventArgs e)
         {
-            if (sender is not MenuItem mi || mi.Tag is not ChatMessageView msg)
-                return;
+            await EditMessageAsync(e.Message);
+        }
 
+        private async void OnMessageDeleteRequested(object? sender, ChatMessageEventArgs e)
+        {
+            await DeleteMessageAsync(e.Message);
+        }
+
+        private async Task EditMessageAsync(ChatMessageView msg)
+        {
             if (!msg.FromEmail.Equals(Session.Email, StringComparison.OrdinalIgnoreCase))
             {
                 MessageBox.Show("Можно редактировать только свои сообщения.");
                 return;
             }
 
-            var newText = Interaction.InputBox("Измените текст сообщения:", "Редактирование", msg.Text);
+            var editWindow = new EditMessageWindow(msg.Text)
+            {
+                Owner = this
+            };
+
+            if (editWindow.ShowDialog() != true)
+                return;
+
+            var newText = editWindow.MessageText;
 
             if (string.IsNullOrWhiteSpace(newText) || newText == msg.Text)
                 return;
@@ -601,11 +616,8 @@ namespace ChatClient
             }
         }
 
-        private async void DeleteMessageMenu_Click(object sender, RoutedEventArgs e)
+        private async Task DeleteMessageAsync(ChatMessageView msg)
         {
-            if (sender is not MenuItem mi || mi.Tag is not ChatMessageView msg)
-                return;
-
             if (!msg.FromEmail.Equals(Session.Email, StringComparison.OrdinalIgnoreCase))
             {
                 MessageBox.Show("Можно удалять только свои сообщения.");
@@ -628,31 +640,6 @@ namespace ChatClient
                     Timestamp = DateTime.Now
                 });
             }
-        }
-
-
-        private void OnMessageContextRequested(object? sender, ChatMessageEventArgs e)
-        {
-            var msg = e.Message;
-
-            // Создаём контекстное меню
-            var menu = new ContextMenu();
-            var editItem = new MenuItem
-            {
-                Header = "Редактировать",
-                Tag = msg
-            };
-            editItem.Click += EditMessageMenu_Click;
-
-            var deleteItem = new MenuItem
-            {
-                Header = "Удалить",
-                Tag = msg
-            };
-            deleteItem.Click += DeleteMessageMenu_Click;
-            menu.Items.Add(editItem);
-            menu.Items.Add(deleteItem);
-            menu.IsOpen = true;
         }
 
         private async Task ReloadCurrentDialogAsync()

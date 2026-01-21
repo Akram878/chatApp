@@ -54,7 +54,7 @@ namespace ChatClient {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/ChatClient;component/app.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/chatclient;component/app.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\App.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

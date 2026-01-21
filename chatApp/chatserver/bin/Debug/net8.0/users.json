@@ -9,9 +9,7 @@
     "Status": 1,
     "NotificationsEnabled": true,
     "SoundEnabled": true,
-    "BannerEnabled": true,
-    "EmailConfirmed": false,
-    "EmailConfirmToken": null
+    "BannerEnabled": true
   },
   {
     "Id": "0d1bd382-258f-4409-8429-0a9d7178a516",
@@ -23,9 +21,7 @@
     "Status": 0,
     "NotificationsEnabled": true,
     "SoundEnabled": true,
-    "BannerEnabled": true,
-    "EmailConfirmed": false,
-    "EmailConfirmToken": null
+    "BannerEnabled": true
   },
   {
     "Id": "1e4fa034-a373-43f7-8635-4530ff665a38",
@@ -37,9 +33,7 @@
     "Status": 0,
     "NotificationsEnabled": true,
     "SoundEnabled": true,
-    "BannerEnabled": true,
-    "EmailConfirmed": false,
-    "EmailConfirmToken": null
+    "BannerEnabled": true
   },
   {
     "Id": "af8ae5f6-eb62-4962-9a8f-93b1594517aa",
@@ -51,22 +45,6 @@
     "Status": 0,
     "NotificationsEnabled": true,
     "SoundEnabled": true,
-    "BannerEnabled": true,
-    "EmailConfirmed": false,
-    "EmailConfirmToken": null
-  },
-  {
-    "Id": "c6320f6d-bb38-43f6-a9ff-889c4906cd3c",
-    "Email": "akram@gmail.com",
-    "Password": "akram123",
-    "Name": "akram",
-    "AvatarUrl": "/avatars/c6320f6d-bb38-43f6-a9ff-889c4906cd3c.jpg",
-    "Bio": null,
-    "Status": 0,
-    "NotificationsEnabled": true,
-    "SoundEnabled": true,
-    "BannerEnabled": true,
-    "EmailConfirmed": false,
-    "EmailConfirmToken": "6a4d8aad0f954f3590ae6457a6d143ea"
+    "BannerEnabled": true
   }
 ]

@@ -106,3 +106,5 @@ D:\programming\chatApp-main\chatApp-main\chatApp\chatclient\obj\Debug\net8.0-win
 D:\programming\chatApp-main\chatApp-main\chatApp\chatclient\obj\Debug\net8.0-windows\ChatView.g.cs
 D:\programming\chatApp-main\chatApp-main\chatApp\chatclient\obj\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs
 D:\programming\chatApp-main\chatApp-main\chatApp\chatclient\obj\Debug\net8.0-windows\chatclient_MarkupCompile.lref
+D:\programming\chatApp-main\chatApp-main\chatApp\chatclient\obj\Debug\net8.0-windows\EditMessageWindow.baml
+D:\programming\chatApp-main\chatApp-main\chatApp\chatclient\obj\Debug\net8.0-windows\EditMessageWindow.g.cs

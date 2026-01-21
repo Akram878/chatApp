@@ -11,7 +11,8 @@ namespace ChatClient
         public event EventHandler? ProfileRequested;
         public event EventHandler? LogoutRequested;
         public event EventHandler<ChatMessageEventArgs>? MessageDoubleClicked;
-        public event EventHandler<ChatMessageEventArgs>? MessageContextRequested;
+        public event EventHandler<ChatMessageEventArgs>? MessageEditRequested;
+        public event EventHandler<ChatMessageEventArgs>? MessageDeleteRequested;
 
         public ChatView()
         {
@@ -63,11 +64,19 @@ namespace ChatClient
             }
         }
 
-        private void OnMessagesListBoxMouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        private void OnEditMessageClick(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (MessagesListBox.SelectedItem is ChatMessageView message)
+            if (sender is Button { Tag: ChatMessageView message })
             {
-                MessageContextRequested?.Invoke(this, new ChatMessageEventArgs(message));
+                MessageEditRequested?.Invoke(this, new ChatMessageEventArgs(message));
+            }
+        }
+
+        private void OnDeleteMessageClick(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (sender is Button { Tag: ChatMessageView message })
+            {
+                MessageDeleteRequested?.Invoke(this, new ChatMessageEventArgs(message));
             }
         }
     }
