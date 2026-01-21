@@ -142,7 +142,7 @@ namespace ChatClient
                 // простое имя (всё до @)
                 var namePart = email.Split('@')[0];
                 if (string.IsNullOrWhiteSpace(namePart))
-                    namePart = "User";
+                    namePart = email;
 
                 var req = new RegisterRequest
                 {

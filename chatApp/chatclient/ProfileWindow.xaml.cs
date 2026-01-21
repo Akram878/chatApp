@@ -82,7 +82,7 @@ namespace ChatClient
                     _hub = null;
                 }
 
-                var email = string.IsNullOrWhiteSpace(Session.Email) ? "anonymous@example.com" : Session.Email;
+                var email = Session.Email ?? string.Empty; ;
                 var hubUrl = $"{HubUrl}?user={Uri.EscapeDataString(email)}";
 
                 _hub = new HubConnectionBuilder().WithUrl(hubUrl).WithAutomaticReconnect().Build();

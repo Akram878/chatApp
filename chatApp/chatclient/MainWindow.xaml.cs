@@ -29,7 +29,7 @@ namespace ChatClient
         // Email текущего собеседника
         private string? _currentDialogEmail;
 
-        public MainWindow() : this(Session.Name ?? "User")
+        public MainWindow() : this(Session.Name ?? string.Empty)
         {
         }
 
@@ -61,9 +61,9 @@ namespace ChatClient
 
         private void InitializeConnection()
         {
-           
+
             // email текущего пользователя
-            var email = string.IsNullOrEmpty(Session.Email) ? "anonymous@example.com" : Session.Email;
+            var email = Session.Email ?? string.Empty;
 
             var urlWithUser = $"{HubUrl}?user={Uri.EscapeDataString(email)}";
 
@@ -351,7 +351,7 @@ namespace ChatClient
                 }
                 else
                 {
-                    var user = string.IsNullOrWhiteSpace(UserNameTextBox.Text) ? "Аноним" : UserNameTextBox.Text;
+                    var user = string.IsNullOrWhiteSpace(UserNameTextBox.Text) ? (Session.Name ?? string.Empty) : UserNameTextBox.Text;
                     await _connection.InvokeAsync("SendMessage", user, text);
                 }
                 MessageTextBox.Clear();
