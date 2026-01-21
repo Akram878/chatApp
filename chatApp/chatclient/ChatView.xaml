@@ -83,7 +83,9 @@
         <Border Grid.Row="1"
                 Style="{StaticResource CardBorderStyle}"
                 Padding="10">
-            <ListBox ItemsSource="{Binding Messages}">
+            <ListBox x:Name="MessagesListBox"
+                     ItemsSource="{Binding Messages}"
+                     MouseDoubleClick="OnMessagesListBoxMouseDoubleClick">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
                         <Setter Property="Padding" Value="0"/>
