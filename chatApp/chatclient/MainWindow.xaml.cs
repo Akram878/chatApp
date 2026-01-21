@@ -7,7 +7,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
+
 using System.Windows.Media;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Win32;
@@ -19,7 +19,7 @@ namespace ChatClient
     public partial class MainWindow : Window
     {
         private HubConnection? _connection;
-
+        private readonly ChatViewModel _chatViewModel = new();
         // Сообщения текущего открытого диалога
         private readonly ObservableCollection<ChatMessageView> _currentMessages = new();
 
@@ -37,11 +37,19 @@ namespace ChatClient
         {
             InitializeComponent();
 
-            // Показываем имя в текстбоксе
-            UserNameTextBox.Text = userName;
+            _chatViewModel.UserName = userName;
+            _chatViewModel.Messages = _currentMessages;
+            _chatViewModel.ConnectionStatusBrush = Brushes.Gray;
+            ChatView.DataContext = _chatViewModel;
+            ChatView.SendRequested += SendButton_Click;
+            ChatView.AttachRequested += AttachButton_Click;
+            ChatView.ProfileRequested += ProfileButton_Click;
+            ChatView.LogoutRequested += LogoutButton_Click;
+            ChatView.MessageDoubleClicked += OnMessageDoubleClicked;
+            ChatView.MessageContextRequested += OnMessageContextRequested;
 
             // Привязываем источники данных
-            MessagesListBox.ItemsSource = _currentMessages;
+          
             ContactsListBox.ItemsSource = _contacts;
 
             InitializeConnection();
@@ -190,8 +198,8 @@ namespace ChatClient
                 });
 
                 await _connection.StartAsync();
-                ConnectionStatusTextBlock.Text = "Подключено";
-                ConnectionStatusTextBlock.Foreground = Brushes.Green;
+                _chatViewModel.ConnectionStatus = "Подключено";
+                _chatViewModel.ConnectionStatusBrush = Brushes.Green;
 
                 _currentMessages.Add(new ChatMessageView
                 {
@@ -202,8 +210,8 @@ namespace ChatClient
             }
             catch (Exception ex)
             {
-                ConnectionStatusTextBlock.Text = "Ошибка";
-                ConnectionStatusTextBlock.Foreground = Brushes.Red;
+                _chatViewModel.ConnectionStatus = "Подключено";
+                _chatViewModel.ConnectionStatusBrush = Brushes.Green;
                 _currentMessages.Add(new ChatMessageView
                 {
                     Text = $"Не удалось подключиться к {hubUrl}: {ex.Message}",
@@ -337,9 +345,9 @@ namespace ChatClient
         }
 
         // Отправка сообщений
-        private async void SendButton_Click(object sender, RoutedEventArgs e)
+        private async void SendButton_Click(object? sender, EventArgs e)
         {
-            var text = MessageTextBox.Text;
+            var text = _chatViewModel.MessageText;
             if (string.IsNullOrWhiteSpace(text) || _connection == null)
                 return;
 
@@ -351,10 +359,10 @@ namespace ChatClient
                 }
                 else
                 {
-                    var user = string.IsNullOrWhiteSpace(UserNameTextBox.Text) ? (Session.Name ?? string.Empty) : UserNameTextBox.Text;
+                    var user = string.IsNullOrWhiteSpace(_chatViewModel.UserName) ? (Session.Name ?? string.Empty) : _chatViewModel.UserName; 
                     await _connection.InvokeAsync("SendMessage", user, text);
                 }
-                MessageTextBox.Clear();
+                _chatViewModel.MessageText = string.Empty;
                 ScrollMessagesToBottom();
 
             }
@@ -369,13 +377,7 @@ namespace ChatClient
             }
         }
 
-        private void MessageTextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                SendButton_Click(sender, e);
-            }
-        }
+       
 
         // Контакты и диалоги
         private async void ContactsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -433,17 +435,17 @@ namespace ChatClient
         }
 
         // Профиль
-        private void ProfileButton_Click(object sender, RoutedEventArgs e)
+        private void ProfileButton_Click(object? sender, EventArgs e)
         {
             var profileWindow = new ProfileWindow { Owner = this };
             profileWindow.ShowDialog();
-            UserNameTextBox.Text = Session.Name;
+            _chatViewModel.UserName = Session.Name ?? string.Empty;
             _ = LoadContactsAsync();
         }
 
 
         // Выход
-        private async void LogoutButton_Click(object sender, RoutedEventArgs e)
+        private async void LogoutButton_Click(object? sender, EventArgs e)
         {
             try
             {
@@ -465,7 +467,7 @@ namespace ChatClient
         }
 
         // Приклепление файлов
-        private async void AttachButton_Click(object sender, RoutedEventArgs e)
+        private async void AttachButton_Click(object? sender, EventArgs e)
         {
             if (_connection == null || _connection.State != HubConnectionState.Connected)
                 return;
@@ -524,10 +526,10 @@ namespace ChatClient
             }
         }
 
-        private void MessagesListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void OnMessageDoubleClicked(object? sender, ChatMessageEventArgs e)
         {
-            if (MessagesListBox.SelectedItem is not ChatMessageView msg)
-                return;
+            var msg = e.Message;
+
 
             if (!msg.IsFile || msg.FileContent == null || msg.FileContent.Length == 0)
                 return;
@@ -617,10 +619,9 @@ namespace ChatClient
         }
 
 
-        private void MessagesListBox_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        private void OnMessageContextRequested(object? sender, ChatMessageEventArgs e)
         {
-            if (MessagesListBox.SelectedItem is not ChatMessageView msg)
-                return;
+            var msg = e.Message;
 
             // Создаём контекстное меню
             var menu = new ContextMenu();
@@ -685,8 +686,7 @@ namespace ChatClient
         private void ScrollMessagesToBottom()
         {
             if (_currentMessages.Count == 0) return;
-            var last = _currentMessages[_currentMessages.Count - 1];
-            MessagesListBox.ScrollIntoView(last);
+            ChatView.ScrollMessagesToBottom();
         }
     }
 }
