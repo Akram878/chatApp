@@ -57,7 +57,7 @@ namespace ChatClient
 
         // Иницилизация подключения
         private static readonly string ServerBaseUrl =
-             Environment.GetEnvironmentVariable("CHATAPP_SERVER_BASE_URL") ?? "http://localhost:5172";
+               Environment.GetEnvironmentVariable("CHATAPP_SERVER_BASE_URL") ?? "http://192.168.0.9:5000";
 
         private void InitializeConnection()
         {

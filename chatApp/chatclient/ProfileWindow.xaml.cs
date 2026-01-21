@@ -17,7 +17,7 @@ namespace ChatClient
     public partial class ProfileWindow : Window
     {
         private static readonly string BaseUrl =
-           Environment.GetEnvironmentVariable("CHATAPP_SERVER_BASE_URL") ?? "http://localhost:5172";
+            Environment.GetEnvironmentVariable("CHATAPP_SERVER_BASE_URL") ?? "http://192.168.0.9:5000";
         private readonly HttpClient _httpClient = new HttpClient(new HttpClientHandler { ServerCertificateCustomValidationCallback = (_, _, _, _) => true });
         private HubConnection? _hub;
 
