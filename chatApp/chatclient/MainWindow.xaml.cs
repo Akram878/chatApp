@@ -39,6 +39,8 @@ namespace ChatClient
             _chatViewModel.UserName = userName;
             _chatViewModel.Messages = _currentMessages;
             _chatViewModel.ConnectionStatusBrush = Brushes.Gray;
+            _chatViewModel.IsConversationSelected = false;
+            DataContext = _chatViewModel;
             ChatView.DataContext = _chatViewModel;
             ChatView.SendRequested += SendButton_Click;
             ChatView.AttachRequested += AttachButton_Click;
@@ -190,34 +192,19 @@ namespace ChatClient
         {
             try
             {
-                _currentMessages.Add(new ChatMessageView
-                {
-                    Text = $"Подключение к {hubUrl}",
-                    Timestamp = DateTime.Now,
-                    FromEmail = "system"
-                });
+                
 
                 await _connection.StartAsync();
                 _chatViewModel.ConnectionStatus = "Подключено";
                 _chatViewModel.ConnectionStatusBrush = Brushes.Green;
 
-                _currentMessages.Add(new ChatMessageView
-                {
-                    Text = $"Подключено к серверу чата: {hubUrl}",
-                    Timestamp = DateTime.Now,
-                    FromEmail = "system"
-                });
+               
             }
             catch (Exception ex)
             {
                 _chatViewModel.ConnectionStatus = "Подключено";
                 _chatViewModel.ConnectionStatusBrush = Brushes.Green;
-                _currentMessages.Add(new ChatMessageView
-                {
-                    Text = $"Не удалось подключиться к {hubUrl}: {ex.Message}",
-                    Timestamp = DateTime.Now,
-                    FromEmail = "system"
-                });
+               
             }
         }
 
@@ -268,9 +255,9 @@ namespace ChatClient
             Dispatcher.Invoke(() =>
             {
                 // добавляем в текущий список сообщений, если подходит под открытый диалог
-                if (_currentDialogEmail == null ||
-                    msg.FromEmail == _currentDialogEmail ||
-                    msg.ToEmail == _currentDialogEmail)
+                if (_currentDialogEmail != null &&
+                  (msg.FromEmail == _currentDialogEmail ||
+                  msg.ToEmail == _currentDialogEmail))
                 {
                     _currentMessages.Add(msg);
                     ScrollMessagesToBottom();
@@ -353,20 +340,12 @@ namespace ChatClient
         private async void SendButton_Click(object? sender, EventArgs e)
         {
             var text = _chatViewModel.MessageText;
-            if (string.IsNullOrWhiteSpace(text) || _connection == null)
+            if (string.IsNullOrWhiteSpace(text) || _connection == null || string.IsNullOrEmpty(_currentDialogEmail))
                 return;
 
             try
             {
-                if (!string.IsNullOrEmpty(_currentDialogEmail))
-                {
-                    await _connection.InvokeAsync("SendPrivateMessage", _currentDialogEmail, text, false, null, null);
-                }
-                else
-                {
-                    var user = string.IsNullOrWhiteSpace(_chatViewModel.UserName) ? (Session.Name ?? string.Empty) : _chatViewModel.UserName;
-                    await _connection.InvokeAsync("SendMessage", user, text);
-                }
+                await _connection.InvokeAsync("SendPrivateMessage", _currentDialogEmail, text, false, null, null);
                 _chatViewModel.MessageText = string.Empty;
                 ScrollMessagesToBottom();
 
@@ -388,12 +367,21 @@ namespace ChatClient
         private async void ContactsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var contact = ContactsListBox.SelectedItem as ContactView;
-            if (contact == null || _connection == null || _connection.State != HubConnectionState.Connected)
+            if (contact == null)
+            {
+                _currentDialogEmail = null;
+                NotificationService.ActiveDialogEmail = null;
+                _chatViewModel.IsConversationSelected = false;
+                _currentMessages.Clear();
+                return;
+            }
+
+            if (_connection == null || _connection.State != HubConnectionState.Connected)
                 return;
 
             _currentDialogEmail = contact.Email;
             NotificationService.ActiveDialogEmail = _currentDialogEmail;
-
+            _chatViewModel.IsConversationSelected = true;
 
             try
             {
@@ -486,12 +474,7 @@ namespace ChatClient
 
             if (string.IsNullOrEmpty(_currentDialogEmail))
             {
-                _currentMessages.Add(new ChatMessageView
-                {
-                    FromEmail = "system",
-                    Text = "Сначала выбери контакт слева, потом отправляй файл.",
-                    Timestamp = DateTime.Now
-                });
+                
                 return;
             }
 

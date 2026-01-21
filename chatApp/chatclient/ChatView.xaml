@@ -49,15 +49,7 @@
                                Foreground="{StaticResource BrushTextPrimary}"
                                Margin="0,0,20,0"/>
 
-                    <TextBlock Text="Статус"
-                               Style="{StaticResource FormLabelText}"
-                               FontSize="12"
-                               Margin="0,0,6,0"/>
-
-                    <TextBlock Text="{Binding ConnectionStatus}"
-                               FontSize="12"
-                               Foreground="{Binding ConnectionStatusBrush}"
-                               VerticalAlignment="Center"/>
+                   
                 </StackPanel>
 
                 <StackPanel Grid.Column="1"
@@ -242,6 +234,7 @@
                          Padding="8,6"
                          Margin="0,0,10,0"
                          Text="{Binding MessageText, UpdateSourceTrigger=PropertyChanged}"
+                           IsEnabled="{Binding IsConversationSelected}"
                          AcceptsReturn="True"
                          TextWrapping="Wrap"
                          VerticalScrollBarVisibility="Auto"
@@ -253,6 +246,7 @@
                         Height="36"
                         Margin="0,0,10,0"
                         Style="{StaticResource SecondaryButtonStyle}"
+                           IsEnabled="{Binding IsConversationSelected}"
                         Click="OnAttachClick">
                     <Viewbox Width="18" Height="18">
                         <Path Fill="{StaticResource BrushTextSecondary}"
@@ -264,6 +258,7 @@
                         Content="Отправить"
                         Width="120"
                         Height="36"
+                         IsEnabled="{Binding IsConversationSelected}"
                         Click="OnSendClick"/>
             </Grid>
         </Border>

@@ -12,6 +12,7 @@ namespace ChatClient
         private Brush? _connectionStatusBrush;
         private string _messageText = string.Empty;
         private ObservableCollection<ChatMessageView> _messages = new();
+        private bool _isConversationSelected;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -69,7 +70,16 @@ namespace ChatClient
                 OnPropertyChanged();
             }
         }
-
+        public bool IsConversationSelected
+        {
+            get => _isConversationSelected;
+            set
+            {
+                if (_isConversationSelected == value) return;
+                _isConversationSelected = value;
+                OnPropertyChanged();
+            }
+        }
         private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
