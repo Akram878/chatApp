@@ -8,8 +8,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <tb:TaskbarIcon x:Key="TrayIcon"
-                            ToolTipText="ChatClient"
-                            IconSource="pack://application:,,,/ChatClient;component/Assets/app.ico"/>
+                            ToolTipText="ChatClient"/>
 
             <Color x:Key="ColorBackground">#F5F7FA</Color>
             <Color x:Key="ColorSurface">#FFFFFF</Color>

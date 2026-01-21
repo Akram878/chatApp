@@ -43,11 +43,14 @@ namespace ChatServer
                 var user = ChatServer.Models.UserStore.GetByEmail(email!);
                 if (user != null)
                 {
-                    if (user.Status == UserStatus.Offline)
+                    if (user.Status == UserStatus.Offline) 
+                    {
                         user.Status = UserStatus.Online;
-                    // если DoNotDisturb — не трогаем
+                    }
 
+                    ChatServer.Models.UserStore.UpdateUser(user);
 
+                    await Clients.All.SendAsync("UserRegistered", UserDto.FromUser(user));
                     await Clients.All.SendAsync("UserStatusChanged", user.Email, user.Status.ToString());
                 }
 
@@ -79,6 +82,26 @@ namespace ChatServer
             await base.OnDisconnectedAsync(exception);
         }
 
+        public async Task Logout()
+        {
+            var email = GetUserEmail();
+            if (string.IsNullOrEmpty(email))
+                return;
+
+            foreach (var pair in _connections.Where(p => p.Value.Equals(email, StringComparison.OrdinalIgnoreCase)).ToList())
+            {
+                _connections.TryRemove(pair.Key, out _);
+            }
+
+            var user = ChatServer.Models.UserStore.GetByEmail(email);
+            if (user == null)
+                return;
+
+            user.Status = ChatServer.Models.UserStatus.Offline;
+            ChatServer.Models.UserStore.UpdateUser(user);
+
+            await Clients.All.SendAsync("UserStatusChanged", user.Email, user.Status.ToString());
+        }
 
         private IEnumerable<string> GetConnectionsByEmail(string email)
         {

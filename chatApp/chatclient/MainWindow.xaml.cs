@@ -456,6 +456,13 @@ namespace ChatClient
             {
                 if (_connection != null)
                 {
+                    try
+                    {
+                        await _connection.InvokeAsync("Logout");
+                    }
+                    catch
+                    {
+                    }
                     await _connection.StopAsync();
                     await _connection.DisposeAsync();
                     _connection = null;

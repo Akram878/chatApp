@@ -61,10 +61,6 @@ public class AuthController : ControllerBase
         if (user == null || user.Password != request.Password)
             return Unauthorized("Неверный email или пароль.");
 
-        if (user.Status == UserStatus.Offline)
-            user.Status = UserStatus.Online;
-
-        UserStore.UpdateUser(user);
         return Ok(UserDto.FromUser(user));
     }
 
