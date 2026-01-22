@@ -1,17 +1,18 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-
 using System.Windows.Media;
-using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.Win32;
-using System.IO;
+using System.Diagnostics;
 
 namespace ChatClient
 {
@@ -77,6 +78,7 @@ namespace ChatClient
 
             var urlWithUser = $"{HubUrl}?user={Uri.EscapeDataString(email)}";
 
+            Debug.WriteLine($"SignalR hub URL: {urlWithUser}");
             _connection = new HubConnectionBuilder().WithUrl(urlWithUser).WithAutomaticReconnect().Build();
 
             // Старый общий чат
@@ -195,6 +197,7 @@ namespace ChatClient
                 
 
                 await _connection.StartAsync();
+                Debug.WriteLine("SignalR connection established.");
                 _chatViewModel.ConnectionStatus = "Подключено";
                 _chatViewModel.ConnectionStatusBrush = Brushes.Green;
 
@@ -202,6 +205,7 @@ namespace ChatClient
             }
             catch (Exception ex)
             {
+                Debug.WriteLine($"SignalR connection failed: {ex}");
                 _chatViewModel.ConnectionStatus = "Подключено";
                 _chatViewModel.ConnectionStatusBrush = Brushes.Green;
                

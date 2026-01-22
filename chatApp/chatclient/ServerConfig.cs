@@ -5,7 +5,7 @@ namespace ChatClient
     public static class ServerConfig
     {
         private const int ServerPort = 5000;
-        private const string DefaultServerIp = "192.168.0.9";
+        private const string DefaultServerIp = "10.11.160.75";
 
         public static string ServerIp { get; } = NormalizeServerIp(Environment.GetEnvironmentVariable("SERVER_IP"));
 
