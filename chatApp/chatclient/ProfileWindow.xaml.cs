@@ -320,6 +320,14 @@ namespace ChatClient
                 StatusTextBlock.Text = "Пароль изменён.";
                 OldPasswordBox.Password = "";
                 NewPasswordBox.Password = "";
+
+
+
+                ClientConfig.Save(new ClientConfigModel
+                {
+                    Email = Session.Email,
+                    Password = newPass
+                });
             }
             catch (Exception ex)
             {
