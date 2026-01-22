@@ -151,12 +151,21 @@
 
                     <TextBlock Text="Смена пароля"
                                Style="{StaticResource FormLabelText}"/>
+
+                    <TextBlock Text="Текущий пароль"
+Style="{StaticResource FormLabelText}"/>
                     <PasswordBox x:Name="OldPasswordBox"
-                                 Height="32"
-                                 Margin="0,0,0,8"/>
+                      Height="32"
+                      Margin="0,0,0,8"
+                      ToolTip="Введите текущий пароль"/>
+
+
+                    <TextBlock Text="Новый пароль"
+Style="{StaticResource FormLabelText}"/>
                     <PasswordBox x:Name="NewPasswordBox"
-                                 Height="32"
-                                 Margin="0,0,0,14"/>
+                      Height="32"
+                      Margin="0,0,0,14"
+                      ToolTip="Введите новый пароль"/>
 
                     <Button Content="Изменить пароль"
                             Width="180"

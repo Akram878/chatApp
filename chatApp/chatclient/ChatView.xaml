@@ -1,4 +1,4 @@
-﻿ ﻿<UserControl x:Class="ChatClient.ChatView"
+﻿<UserControl x:Class="ChatClient.ChatView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -49,7 +49,7 @@
                                Foreground="{StaticResource BrushTextPrimary}"
                                Margin="0,0,20,0"/>
 
-
+                   
                 </StackPanel>
 
                 <StackPanel Grid.Column="1"
@@ -75,8 +75,10 @@
                 Style="{StaticResource CardBorderStyle}"
                 Padding="10">
             <ListBox x:Name="MessagesListBox"
-                     ItemsSource="{Binding Messages}"
-                     MouseDoubleClick="OnMessagesListBoxMouseDoubleClick">
+         ItemsSource="{Binding Messages}"
+         MouseDoubleClick="OnMessagesListBoxMouseDoubleClick"
+         ScrollViewer.CanContentScroll="False"
+         VirtualizingStackPanel.IsVirtualizing="False">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
                         <Setter Property="Padding" Value="0"/>
@@ -96,7 +98,7 @@
 
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid HorizontalAlignment="Stretch">
+                        <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
@@ -104,120 +106,82 @@
 
                             <!-- MESSAGE BUBBLE -->
                             <Border x:Name="MessageBubble"
-                                    Grid.Row="0"
-                                    MaxWidth="420"
-                                    Margin="6,2"
-                                    Padding="12,8"
-                                    Background="{StaticResource BrushSurfaceAlt}"
-                                    CornerRadius="16"
-                                    HorizontalAlignment="Left">
-                                <StackPanel>
+                Grid.Row="0"
+                MaxWidth="420"
+                Margin="6,2"
+                Padding="12,8"
+                Background="{StaticResource BrushSurfaceAlt}"
+                CornerRadius="16"
+                HorizontalAlignment="Left">
+
+                                <Grid>
                                     <TextBlock x:Name="FileLabel"
-                                               Text="{Binding FileName, StringFormat=[Файл: {0}]}"
-                                               FontSize="11"
-                                               Foreground="{StaticResource BrushTextSecondary}"
-                                               Margin="0,0,0,4"
-                                               Visibility="Collapsed"/>
+                           Text="{Binding FileName, StringFormat=[Файл: {0}]}"
+                           FontSize="11"
+                           Foreground="{StaticResource BrushTextSecondary}"
+                           Margin="0,0,0,4"
+                           Visibility="Collapsed"/>
 
                                     <TextBlock x:Name="MessageText"
-                                               Text="{Binding Text}"
-                                               TextWrapping="Wrap"
-                                               Foreground="{StaticResource BrushTextPrimary}"/>
-                                </StackPanel>
+                           Text="{Binding Text}"
+                           TextWrapping="Wrap"
+                           Foreground="{StaticResource BrushTextPrimary}"
+                           Margin="0,12,0,0"/>
+                                </Grid>
                             </Border>
 
                             <!-- METADATA + ACTIONS -->
                             <StackPanel x:Name="MetadataPanel"
-                                        Grid.Row="1"
-                                        Orientation="Horizontal"
-                                        Margin="18,2,18,0"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Center">
+            Grid.Row="1"
+            Orientation="Horizontal"
+            Margin="18,2,18,0"
+            HorizontalAlignment="Stretch">
 
                                 <TextBlock Text="{Binding Timestamp, StringFormat={}{0:HH:mm}}"
-                                           FontSize="10"
-                                           Foreground="{StaticResource BrushTextSecondary}"/>
+                       FontSize="10"
+                       Foreground="{StaticResource BrushTextSecondary}"/>
 
                                 <TextBlock x:Name="EditedLabel"
-                                           Text="edited"
-                                           FontSize="10"
-                                           Margin="6,0,0,0"
-                                           Foreground="{StaticResource BrushTextSecondary}"
-                                           Visibility="Collapsed"/>
+                       Text="edited"
+                       FontSize="10"
+                       Margin="6,0,0,0"
+                       Foreground="{StaticResource BrushTextSecondary}"
+                       Visibility="Collapsed"/>
 
                                 <TextBlock x:Name="StatusIcon"
-                                           Text="{Binding StatusIcon}"
-                                           FontSize="11"
-                                           Margin="6,0,0,0"
-                                           Foreground="{StaticResource BrushTextSecondary}"
-                                           Visibility="Collapsed"/>
+                       Text="{Binding StatusIcon}"
+                       FontSize="11"
+                       Margin="6,0,0,0"
+                       Foreground="{StaticResource BrushTextSecondary}"
+                       Visibility="Collapsed"/>
 
                                 <StackPanel x:Name="MessageActions"
-                                            Orientation="Horizontal"
-                                            Margin="6,0,0,0"
-                                            Visibility="Collapsed">
+                        Orientation="Horizontal"
+                        Margin="6,0,0,0"
+                        Visibility="Collapsed">
 
                                     <Button Content="Edit"
-        Style="{StaticResource MessageActionButtonStyle}"
-        MinWidth="44"
-        Padding="10,2"
-        Background="#4DA3FF"
-        Foreground="White"
-        BorderBrush="#4DA3FF"
-        ToolTip="Редактировать"
-        Tag="{Binding}"
-        Click="OnEditMessageClick"/>
+                        Style="{StaticResource MessageActionButtonStyle}"
+                        MinWidth="44"
+                        Padding="10,2"
+                        Background="#4DA3FF"
+                        Foreground="White"
+                        BorderBrush="#4DA3FF"
+                        Click="OnEditMessageClick"/>
 
                                     <Button Content="Delete"
-        Style="{StaticResource MessageActionButtonStyle}"
-        MinWidth="56"
-        Padding="10,2"
-        Background="#E55353"
-        Foreground="White"
-        BorderBrush="#E55353"
-        ToolTip="Удалить"
-        Tag="{Binding}"
-        Click="OnDeleteMessageClick"/>
-
+                        Style="{StaticResource MessageActionButtonStyle}"
+                        MinWidth="56"
+                        Padding="10,2"
+                        Background="#E55353"
+                        Foreground="White"
+                        BorderBrush="#E55353"
+                        Click="OnDeleteMessageClick"/>
                                 </StackPanel>
                             </StackPanel>
                         </Grid>
-
-                        <DataTemplate.Triggers>
-                            <DataTrigger Binding="{Binding IsFile}" Value="True">
-                                <Setter TargetName="FileLabel" Property="Visibility" Value="Visible"/>
-                            </DataTrigger>
-
-                            <DataTrigger Binding="{Binding IsEdited}" Value="True">
-                                <Setter TargetName="EditedLabel" Property="Visibility" Value="Visible"/>
-                            </DataTrigger>
-
-                            <DataTrigger Binding="{Binding FromEmail}"
-                                         Value="{x:Static local:Session.Email}">
-                                <Setter TargetName="MessageBubble"
-                                        Property="Background"
-                                        Value="{StaticResource BrushPrimary}"/>
-                                <Setter TargetName="MessageBubble"
-                                        Property="HorizontalAlignment"
-                                        Value="Right"/>
-                                <Setter TargetName="MessageText"
-                                        Property="Foreground"
-                                        Value="White"/>
-                                <Setter TargetName="FileLabel"
-                                        Property="Foreground"
-                                        Value="White"/>
-                                <Setter TargetName="MetadataPanel"
-                                        Property="HorizontalAlignment"
-                                        Value="Right"/>
-                                <Setter TargetName="StatusIcon"
-                                        Property="Visibility"
-                                        Value="Visible"/>
-                                <Setter TargetName="MessageActions"
-                                        Property="Visibility"
-                                        Value="Visible"/>
-                            </DataTrigger>
-                        </DataTemplate.Triggers>
                     </DataTemplate>
+
                 </ListBox.ItemTemplate>
             </ListBox>
         </Border>
